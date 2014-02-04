@@ -41,7 +41,18 @@ def dated_url_for(endpoint, **values):
             file_path = os.path.join(app.root_path,
                                      'static/js', filename)
             values['q'] = int(os.stat(file_path).st_mtime)
+    elif endpoint == 'css_static':
+        filename = values.get('filename', None)
+        if filename:
+            file_path = os.path.join(app.root_path,
+                                     'static/css', filename)
+            values['q'] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)
+
+
+@app.route('/css/<path:filename>')
+def css_static(filename):
+    return send_from_directory(app.root_path + '/static/css/', filename)
 
 
 @app.route('/js/<path:filename>')
